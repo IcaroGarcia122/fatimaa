@@ -1,0 +1,6 @@
+{
+  "name": "Fatima Sampaio | Espaço Fotográfico",
+  "description": "Site oficial e espaço fotográfico de Fátima Sampaio. Há 29 anos criando memórias afetivas com direção acolhedora, portfólio de casais e agendamento de ensaios.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
