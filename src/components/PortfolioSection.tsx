@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { ChevronLeft, ChevronRight, Maximize2, Sparkles, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, Sparkles, Heart, Images } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCoverflow, Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Autoplay, Navigation, FreeMode } from 'swiper/modules';
 
 import 'swiper/css';
-import 'swiper/css/effect-coverflow';
-import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import 'swiper/css/free-mode';
 
 import { PORTFOLIO_DATA } from '../data/canvaData';
 import type { PortfolioItem } from '../types';
@@ -15,71 +14,51 @@ import type { PortfolioItem } from '../types';
 interface PortfolioSectionProps {
   onSelectPhoto: (item: PortfolioItem) => void;
   onOpenBooking: () => void;
+  onOpenFullPortfolio: () => void;
 }
 
 export default function PortfolioSection({
   onSelectPhoto,
   onOpenBooking,
+  onOpenFullPortfolio,
 }: PortfolioSectionProps) {
   const [activeCategory, setActiveCategory] = useState<string>('todos');
 
   const categories = [
     { id: 'todos', label: 'Todos os Ensaios' },
-    { id: 'casal', label: 'Casais & Conexão' },
-    { id: 'detalhes', label: 'Retratos & Espontâneos' },
+    { id: 'gestante', label: 'Gestante & Maternidade' },
+    { id: 'familia', label: 'Família & Vínculos' },
+    { id: 'casal', label: 'Casais' },
+    { id: 'retratos', label: 'Retratos Autoriais' },
   ];
 
   const filteredItems =
     activeCategory === 'todos'
       ? PORTFOLIO_DATA.items
-      : PORTFOLIO_DATA.items.filter((item) => item.category === activeCategory);
+      : PORTFOLIO_DATA.items.filter((item) => {
+          if (activeCategory === 'gestante') return item.categoryLabel.toLowerCase().includes('gestante');
+          if (activeCategory === 'familia') return item.categoryLabel.toLowerCase().includes('família');
+          if (activeCategory === 'casal') return item.categoryLabel.toLowerCase().includes('casal');
+          if (activeCategory === 'retratos') return item.categoryLabel.toLowerCase().includes('retrato');
+          return true;
+        });
 
-  // Ensure enough slides for seamless Coverflow loop
+  // Duplicate items if needed for seamless loop
   const displayItems =
-    filteredItems.length < 6
-      ? [...filteredItems, ...filteredItems, ...filteredItems]
+    filteredItems.length < 8
+      ? [...filteredItems, ...filteredItems]
       : filteredItems;
 
-  const customSwiperStyles = `
-    .portfolio-coverflow-swiper {
-      padding-top: 20px !important;
-      padding-bottom: 60px !important;
-      overflow: visible !important;
-    }
-    .portfolio-coverflow-swiper .swiper-pagination-bullet {
-      background: #737373;
-      opacity: 0.35;
-      transition: all 0.3s ease;
-      width: 8px;
-      height: 8px;
-    }
-    .portfolio-coverflow-swiper .swiper-pagination-bullet-active {
-      background: #01590d !important;
-      opacity: 1;
-      width: 24px !important;
-      border-radius: 9999px !important;
-    }
-    .portfolio-coverflow-swiper .swiper-slide {
-      transition: transform 0.4s ease, opacity 0.4s ease;
-      border-radius: 1.5rem;
-    }
-    .portfolio-coverflow-swiper .swiper-slide-active {
-      z-index: 10;
-    }
-  `;
-
   return (
-    <section id="portfolio" className="py-24 bg-[#fcfbf9] relative overflow-hidden">
-      <style>{customSwiperStyles}</style>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="portfolio" className="py-20 sm:py-28 bg-[#fcfbf9] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10"
+          className="flex flex-col lg:flex-row lg:items-end justify-between gap-6"
         >
           <div className="max-w-2xl">
             <span className="text-xs font-semibold tracking-[0.25em] text-[#01590d] uppercase block mb-3">
@@ -93,14 +72,15 @@ export default function PortfolioSection({
             </p>
           </div>
 
-          {/* Controls: Categories + Navigation arrows for Swiper */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex flex-wrap gap-2">
+          {/* Controls: Categories + Button + Navigation arrows for Swiper */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full lg:w-auto">
+            {/* Scrollable Categories on Mobile */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none w-full sm:w-auto">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`px-4 py-2 rounded-full text-xs font-medium tracking-wide transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer ${
                     activeCategory === cat.id
                       ? 'bg-[#01590d] text-white shadow-xs'
                       : 'bg-white text-neutral-600 border border-neutral-200/80 hover:bg-neutral-100 hover:text-neutral-900'
@@ -111,161 +91,160 @@ export default function PortfolioSection({
               ))}
             </div>
 
-            {/* Custom Navigation Arrows */}
-            <div className="flex items-center gap-2 ml-auto sm:ml-2">
+            <div className="flex items-center gap-2 justify-between sm:justify-start">
+              {/* Button to open full portfolio */}
               <button
-                className="portfolio-prev w-10 h-10 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:bg-[#01590d] hover:text-white hover:border-[#01590d] flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
-                aria-label="Foto anterior"
+                onClick={onOpenFullPortfolio}
+                className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-200 bg-[#01590d] hover:bg-[#027513] text-white flex items-center gap-1.5 sm:gap-2 shadow-xs hover:shadow-md cursor-pointer active:scale-95"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <Images className="w-3.5 h-3.5" />
+                <span>Ver Portfólio Completo</span>
               </button>
-              <button
-                className="portfolio-next w-10 h-10 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:bg-[#01590d] hover:text-white hover:border-[#01590d] flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
-                aria-label="Próxima foto"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
+
+              {/* Navigation Arrows */}
+              <div className="flex items-center gap-2">
+                <button
+                  className="portfolio-prev w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:bg-[#01590d] hover:text-white hover:border-[#01590d] flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
+                  aria-label="Foto anterior"
+                >
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+                <button
+                  className="portfolio-next w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:bg-[#01590d] hover:text-white hover:border-[#01590d] flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
+                  aria-label="Próxima foto"
+                >
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              </div>
             </div>
           </div>
         </motion.div>
+      </div>
 
-        {/* Coverflow Carousel Animation */}
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative w-full"
+      {/* Full-width Carousel: fotos como sessão inteira uma do lado da outra passando como carrossel */}
+      <motion.div
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full relative px-4 sm:px-6 lg:px-8"
+      >
+        <Swiper
+          modules={[Autoplay, Navigation, FreeMode]}
+          slidesPerView={1.15}
+          spaceBetween={16}
+          centeredSlides={false}
+          loop={true}
+          speed={700}
+          autoplay={{
+            delay: 3500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          navigation={{
+            prevEl: '.portfolio-prev',
+            nextEl: '.portfolio-next',
+          }}
+          breakpoints={{
+            540: {
+              slidesPerView: 1.8,
+              spaceBetween: 20,
+            },
+            768: {
+              slidesPerView: 2.5,
+              spaceBetween: 24,
+            },
+            1024: {
+              slidesPerView: 3.4,
+              spaceBetween: 24,
+            },
+            1400: {
+              slidesPerView: 4.2,
+              spaceBetween: 28,
+            },
+          }}
+          className="w-full py-4 overflow-visible"
         >
-          <Swiper
-            key={activeCategory}
-            spaceBetween={32}
-            autoplay={{
-              delay: 3200,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: true,
-            }}
-            effect="coverflow"
-            grabCursor={true}
-            centeredSlides={true}
-            loop={true}
-            slidesPerView={1.3}
-            breakpoints={{
-              640: {
-                slidesPerView: 1.8,
-                spaceBetween: 28,
-              },
-              1024: {
-                slidesPerView: 2.43,
-                spaceBetween: 40,
-              },
-            }}
-            coverflowEffect={{
-              rotate: 0,
-              slideShadows: false,
-              stretch: 0,
-              depth: 100,
-              modifier: 2.5,
-            }}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={{
-              nextEl: '.portfolio-next',
-              prevEl: '.portfolio-prev',
-            }}
-            modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
-            className="portfolio-coverflow-swiper"
-          >
-            {displayItems.map((item, index) => (
-              <SwiperSlide
-                key={`${item.id}-${index}`}
-                className="!h-[380px] sm:!h-[440px] md:!h-[480px] w-full rounded-3xl overflow-hidden cursor-pointer shadow-xl border border-neutral-200/90 bg-white relative group select-none"
+          {displayItems.map((item, index) => (
+            <SwiperSlide key={`${item.id}-${index}`} className="h-auto">
+              <div
                 onClick={() => onSelectPhoto(item)}
+                className="group relative h-[460px] sm:h-[520px] md:h-[580px] lg:h-[620px] w-full rounded-3xl overflow-hidden bg-neutral-900 border border-neutral-200/80 shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col justify-end"
               >
-                {/* Thin Frame Inner Padding */}
-                <div className="p-2 sm:p-2.5 h-full w-full flex flex-col justify-between">
-                  <div className="relative h-full w-full overflow-hidden rounded-2xl bg-neutral-100">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-700 ease-out"
-                      loading="lazy"
-                    />
+                {/* High Resolution Photography */}
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
 
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {/* Subtle Ambient Vignette & Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-85 group-hover:opacity-95 transition-opacity" />
 
-                    {/* Top Tag Pill */}
-                    <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md text-white text-[11px] font-medium tracking-wider uppercase border border-white/20">
-                      {item.categoryLabel}
-                    </div>
-
-                    {/* Zoom Icon Button */}
-                    <div className="absolute top-3.5 right-3.5 w-9 h-9 rounded-full bg-white/85 backdrop-blur-md text-neutral-900 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
-                      <Maximize2 className="w-4 h-4" />
-                    </div>
-
-                    {/* Hover Caption Overlay */}
-                    <div className="absolute bottom-0 inset-x-0 p-6 text-white transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
-                      <h3 className="text-xl font-display font-medium leading-tight text-white drop-shadow-sm">
-                        {item.title}
-                      </h3>
-                      {item.subtitle && (
-                        <p className="text-xs text-neutral-200 mt-1 font-light line-clamp-2 drop-shadow-xs">
-                          {item.subtitle}
-                        </p>
-                      )}
-                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-300 mt-3">
-                        <span>Ampliar fotografia</span>
-                        <Sparkles className="w-3.5 h-3.5" />
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Subtitle bottom caption inside the frame */}
-                  <div className="pt-2.5 px-2 flex items-center justify-between">
-                    <h4 className="text-xs font-medium text-neutral-800 truncate">
-                      {item.title}
-                    </h4>
-                    <span className="text-[10px] text-neutral-500 uppercase tracking-wider shrink-0 pl-2">
-                      {item.categoryLabel}
-                    </span>
+                {/* Hover Maximize Button */}
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-neutral-900 flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+                    <Maximize2 className="w-4 h-4" />
                   </div>
                 </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </motion.div>
 
-        {/* Bottom CTA prompt in Portfolio */}
+                {/* Minimalist Bottom Caption */}
+                <div className="relative z-10 p-5 sm:p-6">
+                  <span className="inline-block px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-semibold tracking-wider uppercase mb-2 border border-white/20">
+                    {item.categoryLabel}
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-display font-medium text-white leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-neutral-200 font-light mt-1 line-clamp-1">
+                    {item.subtitle}
+                  </p>
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </motion.div>
+
+      {/* Bottom CTA prompt in Portfolio */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 sm:mt-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 p-8 rounded-3xl bg-white border border-neutral-200/80 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs"
+          className="p-5 sm:p-7 md:p-8 rounded-2xl sm:rounded-3xl bg-white border border-neutral-200/80 flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-6 shadow-xs"
         >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#01590d]/10 text-[#01590d] flex items-center justify-center shrink-0">
-              <Heart className="w-6 h-6 text-[#01590d]" />
+          <div className="flex items-start sm:items-center gap-3.5 sm:gap-4 w-full">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#01590d]/10 text-[#01590d] flex items-center justify-center shrink-0">
+              <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-[#01590d]" />
             </div>
             <div>
-              <h4 className="text-base font-semibold text-neutral-900">
+              <h4 className="text-sm sm:text-base font-semibold text-neutral-900 leading-snug">
                 Gostou do estilo acolhedor e atemporal?
               </h4>
-              <p className="text-xs text-neutral-600 mt-0.5 font-light">
+              <p className="text-[11px] sm:text-xs text-neutral-600 mt-0.5 font-light">
                 Cada ensaio é personalizado de acordo com a essência e o ritmo de vocês.
               </p>
             </div>
           </div>
 
-          <button
-            onClick={onOpenBooking}
-            className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#01590d] hover:bg-[#01450a] text-white text-xs font-semibold tracking-wider uppercase transition-all duration-200 shrink-0 shadow-sm cursor-pointer"
-          >
-            AGENDAR MEU ENSAIO
-          </button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
+            <button
+              onClick={onOpenFullPortfolio}
+              className="w-full sm:w-auto px-5 py-2.5 sm:py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-semibold tracking-wider uppercase transition-all duration-200 flex items-center justify-center gap-2 border border-neutral-200 cursor-pointer active:scale-95 text-center"
+            >
+              <Images className="w-3.5 h-3.5 text-neutral-600" />
+              <span>Ver Portfólio Completo</span>
+            </button>
+            <button
+              onClick={onOpenBooking}
+              className="w-full sm:w-auto px-6 py-2.5 sm:py-3 rounded-full bg-[#01590d] hover:bg-[#027513] text-white text-xs font-semibold tracking-wider uppercase transition-all duration-200 shadow-sm cursor-pointer active:scale-95 text-center"
+            >
+              AGENDAR MEU ENSAIO
+            </button>
+          </div>
         </motion.div>
       </div>
     </section>

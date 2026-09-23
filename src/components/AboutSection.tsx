@@ -8,26 +8,21 @@ interface AboutSectionProps {
 
 export default function AboutSection({ onOpenBooking }: AboutSectionProps) {
   return (
-    <section id="sobre" className="pt-20 sm:pt-28 pb-0 bg-[#fcfbf9] relative -mt-[2px] z-0 overflow-x-clip">
-      {/* Studio Lighting Setup: animated entrance on scroll */}
+    <section id="sobre" className="pt-20 sm:pt-28 pb-0 bg-[#f0e8dc] relative -mt-[2px] z-0 overflow-x-clip border-t border-[#e2d7c7]">
+      {/* Studio Lighting Setup: balanced softbox */}
       <motion.div
-        initial={{ opacity: 0, x: 50 }}
-        whileInView={{ opacity: 0.95, x: 0 }}
+        initial={{ opacity: 0, x: 40 }}
+        whileInView={{ opacity: 0.9, x: 0 }}
         viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute -right-4 sm:-right-8 md:-right-12 lg:-right-14 -bottom-8 sm:-bottom-12 md:-bottom-16 lg:-bottom-20 pointer-events-none z-0 select-none"
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute right-0 sm:right-2 md:right-4 -bottom-4 sm:-bottom-6 md:-bottom-8 pointer-events-none z-0 select-none"
       >
         <img
           src="/images/softbox-right.png"
           alt="Equipamento de iluminação softbox de estúdio"
-          className="w-64 sm:w-80 md:w-96 lg:w-[440px] xl:w-[480px] h-auto object-contain drop-shadow-xl select-none pointer-events-none opacity-95"
+          className="w-44 sm:w-56 md:w-68 lg:w-80 xl:w-92 h-auto object-contain drop-shadow-lg select-none pointer-events-none opacity-85"
         />
       </motion.div>
-
-      {/* Watermark moved to the top-left corner of this section */}
-      <div className="absolute top-4 sm:top-8 left-4 sm:left-10 select-none pointer-events-none opacity-[0.035] font-script text-[180px] sm:text-[240px] md:text-[280px] text-neutral-900 leading-none">
-        Fatima
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-end">
@@ -39,7 +34,7 @@ export default function AboutSection({ onOpenBooking }: AboutSectionProps) {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-6 flex flex-col justify-center pb-12 sm:pb-20"
           >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/60 border border-emerald-300/40 text-[#01590d] text-xs font-semibold tracking-wider uppercase mb-6 w-fit">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-900/10 border border-emerald-900/20 text-[#01590d] text-xs font-semibold tracking-wider uppercase mb-6 w-fit">
               <Sparkles className="w-3.5 h-3.5" />
               <span>A FOTÓGRAFA</span>
             </div>
@@ -61,7 +56,7 @@ export default function AboutSection({ onOpenBooking }: AboutSectionProps) {
             </div>
 
             {/* Stats row */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-6 mt-10 pt-8 border-t border-neutral-200">
+            <div className="grid grid-cols-3 gap-4 sm:gap-6 mt-10 pt-8 border-t border-[#dfd5c5]">
               {ABOUT_DATA.stats.map((stat, i) => (
                 <div key={i} className="flex flex-col">
                   <span className="font-display text-3xl sm:text-4xl font-normal text-[#01590d]">
@@ -87,14 +82,14 @@ export default function AboutSection({ onOpenBooking }: AboutSectionProps) {
 
               <button
                 onClick={onOpenBooking}
-                className="px-6 py-3 rounded-full bg-[#01590d] hover:bg-[#01450a] text-white text-xs font-semibold tracking-wider uppercase transition-all duration-200 shadow-sm"
+                className="px-6 py-3 rounded-full bg-[#01590d] hover:bg-[#027513] text-white text-xs font-semibold tracking-wider uppercase transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
               >
                 CONVERSAR COM A FÁTIMA
               </button>
             </div>
           </motion.div>
 
-          {/* Right Column: Fátima "Saindo da Moldura" with scroll animation */}
+          {/* Right Column: Fátima e Moldura ampliadas proporcionalmente */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -102,24 +97,24 @@ export default function AboutSection({ onOpenBooking }: AboutSectionProps) {
             transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-6 flex flex-col items-center justify-end"
           >
-            {/* Visual Stage with larger dimensions */}
-            <div className="relative w-full max-w-[480px] sm:max-w-[540px] md:max-w-[580px] lg:max-w-[620px] flex items-end justify-center select-none">
+            {/* Visual Stage */}
+            <div className="relative w-full max-w-[460px] sm:max-w-[500px] md:max-w-[540px] flex items-end justify-center select-none">
               
-              {/* The Moldura (Background Frame) */}
+              {/* The Moldura (Background Frame / Card) */}
               <div
-                className="relative w-[88%] sm:w-[380px] md:w-[420px] lg:w-[460px] h-[490px] sm:h-[550px] md:h-[600px] lg:h-[640px] mb-2 sm:mb-4 rounded-[48px] sm:rounded-[56px] border border-[#dfd4c5] bg-gradient-to-b from-[#f7f3ec] via-[#ede6dc] to-[#e4dcce] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.14)] overflow-hidden flex flex-col justify-end p-6"
+                className="relative w-[88%] sm:w-[350px] md:w-[390px] lg:w-[420px] h-[480px] sm:h-[530px] md:h-[570px] mb-2 sm:mb-3 rounded-[44px] sm:rounded-[52px] border border-[#d6c7b3] bg-gradient-to-b from-[#ffffff] via-[#f7f2ea] to-[#e8dccd] shadow-[0_22px_55px_-15px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col justify-end p-6"
               >
                 {/* Internal ambient illumination highlights */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-white/40 rounded-full blur-2xl pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-40 h-40 bg-black/5 rounded-full blur-xl pointer-events-none" />
+                <div className="absolute top-0 right-0 w-44 h-44 bg-white/60 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-36 h-36 bg-black/5 rounded-full blur-xl pointer-events-none" />
               </div>
 
-              {/* Fátima Cutout ("Saindo da Moldura") */}
+              {/* Fátima Cutout (Aumentada em harmonia com o card) */}
               <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-end pointer-events-none">
                 <img
                   src={ABOUT_DATA.cutoutImage}
-                  alt="Fátima Sampaio saindo da moldura"
-                  className="w-[120%] sm:w-[130%] md:w-[138%] lg:w-[145%] max-w-[580px] sm:max-w-[640px] lg:max-w-[700px] h-auto object-contain object-bottom drop-shadow-[0_22px_38px_rgba(0,0,0,0.25)] translate-x-3 sm:translate-x-5 block"
+                  alt="Fátima Sampaio"
+                  className="w-[104%] sm:w-[106%] md:w-[108%] max-w-[420px] sm:max-w-[460px] md:max-w-[490px] h-auto object-contain object-bottom drop-shadow-[0_18px_34px_rgba(0,0,0,0.24)] translate-x-1 sm:translate-x-2 block"
                 />
               </div>
             </div>

@@ -47,14 +47,11 @@ export default function Footer() {
           {/* Quick Nav Links */}
           <div className="md:col-span-4 flex flex-col sm:flex-row gap-6 sm:gap-12 text-xs font-semibold tracking-wider uppercase text-emerald-200/90 pt-1">
             <div className="flex flex-col space-y-3">
-              <a href="#experiencia" className="hover:text-white transition-colors">
-                EXPERIÊNCIA
-              </a>
               <a href="#portfolio" className="hover:text-white transition-colors">
                 PORTFÓLIO
               </a>
               <a href="#sobre" className="hover:text-white transition-colors">
-                SOBRE
+                SOBRE A FÁTIMA
               </a>
             </div>
             <div className="flex flex-col space-y-3">
@@ -62,7 +59,7 @@ export default function Footer() {
                 O ESPAÇO
               </a>
               <a href="#agendamento" className="hover:text-white transition-colors">
-                AGENDAR
+                AGENDAR ENSAIO
               </a>
             </div>
           </div>
@@ -127,23 +124,23 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Massive Bold "FÁTIMA" watermark spanning edge-to-edge (de ponta a ponta na página) */}
+      {/* Massive Bold "FÁTIMA SAMPAIO" watermark spanning edge-to-edge */}
       <div className="w-full overflow-hidden select-none pointer-events-none -mb-2 sm:-mb-4 md:-mb-8 lg:-mb-12 pt-4 leading-none">
         <svg
-          viewBox="0 0 1000 140"
+          viewBox="0 0 1200 130"
           className="w-full h-auto block"
           preserveAspectRatio="none"
         >
           <text
-            x="500"
-            y="125"
+            x="600"
+            y="110"
             textAnchor="middle"
-            textLength="1000"
+            textLength="1200"
             lengthAdjust="spacingAndGlyphs"
             className="font-sans uppercase fill-white/[0.08]"
-            style={{ fontWeight: 900, fontSize: '155px' }}
+            style={{ fontWeight: 900, fontSize: '130px' }}
           >
-            FÁTIMA
+            FÁTIMA SAMPAIO
           </text>
         </svg>
       </div>

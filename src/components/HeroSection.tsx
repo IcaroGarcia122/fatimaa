@@ -1,4 +1,3 @@
-import { useRef, useEffect } from 'react';
 import { Calendar, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { HERO_DATA } from '../data/canvaData';
@@ -8,74 +7,23 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    // Direct DOM property configuration required for mobile iOS Safari & Android Chrome
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    video.setAttribute('muted', '');
-    video.setAttribute('playsinline', '');
-    video.setAttribute('webkit-playsinline', 'true');
-
-    const attemptPlay = () => {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // If browser or Low Power Mode suspended autoplay, start on first user touch or scroll
-          const triggerPlayOnInteraction = () => {
-            video.play().catch(() => {});
-            window.removeEventListener('touchstart', triggerPlayOnInteraction);
-            window.removeEventListener('scroll', triggerPlayOnInteraction);
-            window.removeEventListener('click', triggerPlayOnInteraction);
-          };
-          window.addEventListener('touchstart', triggerPlayOnInteraction, {
-            once: true,
-            passive: true,
-          });
-          window.addEventListener('scroll', triggerPlayOnInteraction, {
-            once: true,
-            passive: true,
-          });
-          window.addEventListener('click', triggerPlayOnInteraction, {
-            once: true,
-            passive: true,
-          });
-        });
-      }
-    };
-
-    attemptPlay();
-  }, []);
-
   return (
     <section
       id="topo"
       className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden bg-neutral-950 text-white"
     >
-      {/* Background Video: configured for 100% mobile compatibility with fallback poster */}
+      {/* Background Hero Image: High-res photograph with ambient lighting overlays */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster="/images/hero-video-poster.jpg"
-          className="w-full h-full object-cover object-center scale-105 opacity-75 sm:opacity-80"
-        >
-          <source src="/videos/gmaps-video.mp4" type="video/mp4" />
-          <source src="/gmaps-video.mp4" type="video/mp4" />
-        </video>
+        <img
+          src="/images/hero-bg.png"
+          alt="Fatima Sampaio - Espaço Fotográfico"
+          className="w-full h-full object-cover object-center scale-102 transition-transform duration-1000 ease-out"
+        />
 
-        {/* Ambient gradient overlays adjusted to keep video vibrant while keeping text readable */}
-        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-neutral-950/40 to-neutral-950/60" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-950/20 via-transparent to-neutral-950/70" />
+        {/* Ambient gradient overlays for contrast, richness, and pristine text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/95 via-neutral-950/50 to-neutral-950/65" />
+        <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/70 via-transparent to-neutral-950/70" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-950/25 via-transparent to-neutral-950/80" />
       </div>
 
       {/* Hero Content Container with smooth entrance animations */}

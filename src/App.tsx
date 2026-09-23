@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { MessageCircle, ArrowUp } from 'lucide-react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import ExperienceSection from './components/ExperienceSection';
 import PortfolioSection from './components/PortfolioSection';
 import AboutSection from './components/AboutSection';
 import StudioSection from './components/StudioSection';
+import PhotoStripCarousel from './components/PhotoStripCarousel';
 import BookingSection from './components/BookingSection';
 import Footer from './components/Footer';
 import BookingModal from './components/BookingModal';
 import LightboxModal from './components/LightboxModal';
+import FullPortfolioModal from './components/FullPortfolioModal';
 import CanvaSlidesViewer from './components/CanvaSlidesViewer';
 import { PORTFOLIO_DATA, BRAND } from './data/canvaData';
 import type { AppViewMode, PortfolioItem } from './types';
@@ -17,6 +18,7 @@ import type { AppViewMode, PortfolioItem } from './types';
 export default function App() {
   const [viewMode, setViewMode] = useState<AppViewMode>('website');
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isFullPortfolioOpen, setIsFullPortfolioOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<PortfolioItem | null>(null);
 
   // Direct WhatsApp contact URL
@@ -44,39 +46,26 @@ export default function App() {
 
       {/* Main Page Sections matching the 5 Canva Slides */}
       <main className="flex-1">
-        {/* Slide 1: Hero Section */}
+        {/* 1ª Sessão: Hero Section */}
         <HeroSection onOpenBooking={() => setIsBookingOpen(true)} />
 
-        {/* Transitional Experience Breakdown */}
-        <ExperienceSection />
-
-        {/* Half-Moon Logo Emblem flush against the left edge of the page between the two sections */}
-        <div className="relative w-full h-0 z-20 pointer-events-none">
-          <div
-            className="absolute left-0 -top-24 sm:-top-32 md:-top-40 lg:-top-48 -translate-x-1/2 w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <img
-              src="/images/logo.png"
-              alt="Fatima Sampaio - Selo Meia Lua"
-              className="w-full h-full object-contain select-none drop-shadow-lg filter blur-[2px] sm:blur-[2.5px]"
-            />
-          </div>
-        </div>
-
-        {/* Slide 2: Nossa história & Portfolio Gallery */}
+        {/* 2ª Sessão: Portfólio Carrossel Inteiro de Ponta a Ponta (Fotos 1 a 11) */}
         <PortfolioSection
           onSelectPhoto={(photo) => setSelectedPhoto(photo)}
           onOpenBooking={() => setIsBookingOpen(true)}
+          onOpenFullPortfolio={() => setIsFullPortfolioOpen(true)}
         />
 
-        {/* Slide 3: Sobre Fátima Sampaio */}
+        {/* 3ª Sessão: Sobre Fátima Sampaio */}
         <AboutSection onOpenBooking={() => setIsBookingOpen(true)} />
 
-        {/* Slide 4: Nosso Espaço & Estúdio */}
+        {/* 4ª Sessão: Nosso Espaço & Estúdio */}
         <StudioSection onOpenBooking={() => setIsBookingOpen(true)} />
 
-        {/* Slide 5: Agendamento & Contato */}
+        {/* Carrossel Automático de Fotos Lado a Lado (sem legendas ou cards) */}
+        <PhotoStripCarousel onSelectPhoto={(photo) => setSelectedPhoto(photo)} />
+
+        {/* 5ª Sessão: Agendamento & Contato */}
         <BookingSection />
       </main>
 
@@ -87,6 +76,17 @@ export default function App() {
       <BookingModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
+      />
+
+      {/* Full Portfolio Modal Gallery */}
+      <FullPortfolioModal
+        isOpen={isFullPortfolioOpen}
+        onClose={() => setIsFullPortfolioOpen(false)}
+        onSelectPhoto={(photo) => setSelectedPhoto(photo)}
+        onOpenBooking={() => {
+          setIsFullPortfolioOpen(false);
+          setIsBookingOpen(true);
+        }}
       />
 
       {/* Full-screen Photo Lightbox */}
