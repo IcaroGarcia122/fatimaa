@@ -17,15 +17,6 @@ export default function BookingSection() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const portfolioPreviews = [
-    { src: '/images/foto1.jpg', label: 'Gestante' },
-    { src: '/images/foto2.jpg', label: 'Casal' },
-    { src: '/images/foto4.jpg', label: 'Maternidade' },
-    { src: '/images/foto5.jpg', label: 'Família' },
-    { src: '/images/foto8.jpg', label: 'Retrato' },
-  ];
-  const [activePhotoIdx, setActivePhotoIdx] = useState(0);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -79,14 +70,14 @@ export default function BookingSection() {
             transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-5 flex flex-col justify-between rounded-3xl overflow-hidden bg-neutral-950 text-white relative shadow-xl border border-neutral-800"
           >
-            {/* The Photo Stage with Portfolio Images */}
+            {/* The Photo Stage with 1 Portfolio Image */}
             <div className="relative aspect-[4/5] sm:aspect-[1/1] lg:aspect-[4/5] w-full overflow-hidden group">
               <img
-                src={portfolioPreviews[activePhotoIdx].src}
-                alt="Ensaio por Fátima Sampaio"
-                className="w-full h-full object-cover object-center transition-all duration-700 ease-out"
+                src="/images/foto1.jpg"
+                alt="Ensaio fotográfico por Fátima Sampaio"
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-black/40" />
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/25 to-black/35" />
               
               {/* Top Badge: Atendimento Personalizado */}
               <div className="absolute top-4 left-4 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold tracking-wider uppercase border border-white/20 shadow-md">
@@ -94,38 +85,14 @@ export default function BookingSection() {
                 <span>Atendimento Personalizado</span>
               </div>
 
-              {/* Tag with category */}
-              <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-medium tracking-wider uppercase border border-white/20">
-                {portfolioPreviews[activePhotoIdx].label}
-              </div>
-
-              {/* Mini Portfolio Gallery Selector inside the card */}
+              {/* Bottom Caption on the Single Photo */}
               <div className="absolute bottom-4 left-4 right-4 z-10">
-                <p className="text-[10px] uppercase tracking-wider text-neutral-300 font-semibold mb-2 drop-shadow-sm flex items-center justify-between">
-                  <span>Ensaios do Portfólio:</span>
-                  <span className="text-emerald-400 text-[10px] font-normal lowercase">toque para ver</span>
+                <span className="inline-block px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-semibold tracking-wider uppercase mb-1 border border-white/20">
+                  Ensaio Autoral
+                </span>
+                <p className="text-xs text-white/90 font-light">
+                  Fotografia sensível que eterniza a sua história com afeto e calma.
                 </p>
-                <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-                  {portfolioPreviews.map((item, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setActivePhotoIdx(idx)}
-                      className={`relative shrink-0 w-12 h-12 rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-pointer ${
-                        activePhotoIdx === idx
-                          ? 'border-emerald-400 ring-2 ring-emerald-400/50 scale-105'
-                          : 'border-white/30 opacity-70 hover:opacity-100 hover:scale-100'
-                      }`}
-                      aria-label={`Ver foto ${item.label}`}
-                    >
-                      <img
-                        src={item.src}
-                        alt={item.label}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
 
