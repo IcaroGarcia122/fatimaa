@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, Phone, Mail, Send, CheckCircle2, MessageSquare, Clock } from 'lucide-react';
+import { Calendar, Phone, Mail, Send, CheckCircle2, MessageSquare, MessageCircle, Clock } from 'lucide-react';
 import { motion } from 'motion/react';
 import { BOOKING_DATA, BRAND } from '../data/canvaData';
 import type { BookingFormData } from '../types';
@@ -16,6 +16,15 @@ export default function BookingSection() {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const portfolioPreviews = [
+    { src: '/images/foto1.jpg', label: 'Gestante' },
+    { src: '/images/foto2.jpg', label: 'Casal' },
+    { src: '/images/foto4.jpg', label: 'Maternidade' },
+    { src: '/images/foto5.jpg', label: 'Família' },
+    { src: '/images/foto8.jpg', label: 'Retrato' },
+  ];
+  const [activePhotoIdx, setActivePhotoIdx] = useState(0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,67 +71,125 @@ export default function BookingSection() {
 
         {/* 2-Column Booking Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
-          {/* Left Column: Authentic couple photo from Slide 5 (MAGpRXordp0.jpg) & Contact Info */}
+          {/* Left Column: Atendimento Personalizado com Imagens do Portfólio & Contatos */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-5 flex flex-col justify-between rounded-3xl overflow-hidden bg-neutral-950 text-white relative shadow-xl"
+            className="lg:col-span-5 flex flex-col justify-between rounded-3xl overflow-hidden bg-neutral-950 text-white relative shadow-xl border border-neutral-800"
           >
-            {/* The Photo */}
-            <div className="relative aspect-[4/5] w-full overflow-hidden">
+            {/* The Photo Stage with Portfolio Images */}
+            <div className="relative aspect-[4/5] sm:aspect-[1/1] lg:aspect-[4/5] w-full overflow-hidden group">
               <img
-                src={BOOKING_DATA.featuredImage}
-                alt="Casal apaixonado em ensaio fotográfico por Fátima Sampaio"
-                className="w-full h-full object-cover object-center"
+                src={portfolioPreviews[activePhotoIdx].src}
+                alt="Ensaio por Fátima Sampaio"
+                className="w-full h-full object-cover object-center transition-all duration-700 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-black/40" />
               
-              <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md text-white text-[11px] font-medium tracking-wider uppercase border border-white/20">
-                Atendimento Personalizado
+              {/* Top Badge: Atendimento Personalizado */}
+              <div className="absolute top-4 left-4 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold tracking-wider uppercase border border-white/20 shadow-md">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Atendimento Personalizado</span>
+              </div>
+
+              {/* Tag with category */}
+              <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-medium tracking-wider uppercase border border-white/20">
+                {portfolioPreviews[activePhotoIdx].label}
+              </div>
+
+              {/* Mini Portfolio Gallery Selector inside the card */}
+              <div className="absolute bottom-4 left-4 right-4 z-10">
+                <p className="text-[10px] uppercase tracking-wider text-neutral-300 font-semibold mb-2 drop-shadow-sm flex items-center justify-between">
+                  <span>Ensaios do Portfólio:</span>
+                  <span className="text-emerald-400 text-[10px] font-normal lowercase">toque para ver</span>
+                </p>
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                  {portfolioPreviews.map((item, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setActivePhotoIdx(idx)}
+                      className={`relative shrink-0 w-12 h-12 rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-pointer ${
+                        activePhotoIdx === idx
+                          ? 'border-emerald-400 ring-2 ring-emerald-400/50 scale-105'
+                          : 'border-white/30 opacity-70 hover:opacity-100 hover:scale-100'
+                      }`}
+                      aria-label={`Ver foto ${item.label}`}
+                    >
+                      <img
+                        src={item.src}
+                        alt={item.label}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Direct Contact Card embedded inside */}
-            <div className="p-6 sm:p-8 bg-neutral-900 border-t border-neutral-800">
-              <h3 className="text-sm font-semibold tracking-wider text-neutral-300 uppercase mb-4">
+            <div className="p-5 sm:p-7 bg-neutral-900 border-t border-neutral-800 space-y-3">
+              <h3 className="text-xs font-semibold tracking-wider text-neutral-300 uppercase">
                 Dúvidas? Entre em contato direto:
               </h3>
 
-              <div className="space-y-3 text-xs text-neutral-300">
+              <div className="space-y-2.5 text-xs text-neutral-300">
+                {/* WhatsApp */}
                 <a
-                  href={`tel:${BRAND.phoneClean}`}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-neutral-800/80 hover:bg-neutral-800 hover:text-white transition-colors"
+                  href={`https://wa.me/${BRAND.phoneClean}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-emerald-950/50 border border-emerald-700/50 hover:bg-emerald-900/60 hover:border-emerald-500 transition-all duration-200 group cursor-pointer"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-emerald-950/80 text-emerald-400 flex items-center justify-center shrink-0">
-                    <Phone className="w-4 h-4" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-[#01590d] text-white flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform">
+                      <MessageCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
+                          WhatsApp
+                        </p>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      </div>
+                      <p className="font-semibold text-sm text-white">44 99924-2060</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-neutral-400">Telefone / WhatsApp</p>
-                    <p className="font-medium text-sm">{BRAND.phone}</p>
-                  </div>
+                  <span className="text-[11px] text-emerald-300 font-medium group-hover:translate-x-0.5 transition-transform">
+                    Conversar →
+                  </span>
                 </a>
 
+                {/* Email */}
                 <a
                   href={`mailto:${BRAND.email}`}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-neutral-800/80 hover:bg-neutral-800 hover:text-white transition-colors"
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-neutral-800/70 border border-neutral-700/60 hover:bg-neutral-800 hover:border-neutral-500 transition-all duration-200 group cursor-pointer"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-emerald-950/80 text-emerald-400 flex items-center justify-center shrink-0">
-                    <Mail className="w-4 h-4" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-neutral-700 text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                      <Mail className="w-5 h-5 text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">
+                        E-mail
+                      </p>
+                      <p className="font-medium text-sm text-white">fatimasampaio@gmail.com</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-neutral-400">E-mail</p>
-                    <p className="font-medium text-sm">{BRAND.email}</p>
-                  </div>
+                  <span className="text-[11px] text-neutral-400 font-medium group-hover:translate-x-0.5 transition-transform">
+                    Enviar →
+                  </span>
                 </a>
 
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-neutral-800/50">
+                {/* Horário */}
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-neutral-800/40 border border-neutral-800">
                   <div className="w-8 h-8 rounded-lg bg-neutral-800 text-neutral-400 flex items-center justify-center shrink-0">
                     <Clock className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-[10px] text-neutral-400">Horário</p>
+                    <p className="text-[10px] text-neutral-400">Atendimento com hora marcada</p>
                     <p className="font-light text-xs text-neutral-300">{BRAND.hours}</p>
                   </div>
                 </div>
