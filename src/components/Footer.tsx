@@ -1,8 +1,12 @@
-import { ArrowUp, Phone, Mail, Instagram, MessageCircle } from 'lucide-react';
+import { ArrowUp, Phone, Mail, Instagram, MessageCircle, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import { BRAND } from '../data/canvaData';
 
-export default function Footer() {
+interface FooterProps {
+  onOpenAdmin?: () => void;
+}
+
+export default function Footer({ onOpenAdmin }: FooterProps) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -61,6 +65,15 @@ export default function Footer() {
               <a href="#agendamento" className="hover:text-white transition-colors">
                 AGENDAR ENSAIO
               </a>
+              {onOpenAdmin && (
+                <button
+                  onClick={onOpenAdmin}
+                  className="text-emerald-400 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer text-left font-semibold text-xs tracking-wider uppercase pt-1"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>PAINEL ADMIN</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -108,7 +121,17 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-6 pb-4 flex flex-col sm:flex-row items-center justify-between text-[11px] sm:text-xs text-emerald-200/60 uppercase tracking-wider gap-4">
           <p>© 2026 FATIMA SAMPAIO ESPAÇO FOTOGRÁFICO. ALL RIGHTS RESERVED.</p>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6 flex-wrap justify-center sm:justify-end">
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 hover:bg-emerald-950/80 border border-emerald-500/30 hover:border-emerald-400 text-emerald-300 text-[11px] uppercase tracking-wider transition-all cursor-pointer"
+                title="Acessar painel para gerenciar ensaios e fotos"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Painel Administrativo</span>
+              </button>
+            )}
             <span className="text-[10px] text-emerald-300/60 tracking-widest hidden sm:inline">
               DIREÇÃO ARTÍSTICA & FOTOGRAFIA AUTORAL
             </span>

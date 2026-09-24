@@ -1,0 +1,118 @@
+import type { Ensaio } from '../types';
+
+export const DEFAULT_ENSAIOS: Ensaio[] = [
+  {
+    id: 'ensaio-gestante-helena',
+    title: 'Espera de Helena - Luz & Serenidade',
+    subtitle: 'Ensaio de Gestante em estúdio com luz suave',
+    category: 'gestante',
+    categoryLabel: 'Gestante & Maternidade',
+    coverImage: '/images/foto1.jpg',
+    photos: [
+      '/images/foto1.jpg',
+      '/images/foto4.jpg',
+      '/images/foto9.jpg',
+    ],
+    description:
+      'A espera de um filho traz uma serenidade que transcende o tempo. Um ensaio com iluminação envolvente, tons terrosos suaves e a sutileza que a maternidade merece.',
+    date: 'Ensaio Autoral',
+    clientName: 'Helena & Família',
+    isFeatured: true,
+    createdAt: 1700000001000,
+  },
+  {
+    id: 'ensaio-casal-cumplicidade',
+    title: 'Amor & Cumplicidade Genuína',
+    subtitle: 'Ensaio de Casal intimista com direção acolhedora',
+    category: 'casal',
+    categoryLabel: 'Casais',
+    coverImage: '/images/foto2.jpg',
+    photos: [
+      '/images/foto2.jpg',
+      '/images/foto8.jpg',
+      '/images/foto3.jpg',
+    ],
+    description:
+      'Momentos espontâneos de carinho e calma. Cada olhar compartilhado conta uma história única de parceria, carinho e conexão verdadeira sem poses forçadas.',
+    date: 'Ensaio Autoral',
+    clientName: 'Marina & Lucas',
+    isFeatured: true,
+    createdAt: 1700000002000,
+  },
+  {
+    id: 'ensaio-familia-afeto',
+    title: 'Vínculos & Abraços em Família',
+    subtitle: 'Ensaio de Família espontâneo e repleto de afeto',
+    category: 'familia',
+    categoryLabel: 'Família & Vínculos',
+    coverImage: '/images/foto5.jpg',
+    photos: [
+      '/images/foto5.jpg',
+      '/images/foto6.jpg',
+      '/images/foto10.jpg',
+    ],
+    description:
+      'A alegria das crianças e o aconchego dos pais. Uma sessão leve de risos e abraços sinceros eternizados em fotografias que contam uma vida inteira.',
+    date: 'Ensaio Autoral',
+    clientName: 'Família Andrade',
+    isFeatured: true,
+    createdAt: 1700000003000,
+  },
+  {
+    id: 'ensaio-retratos-essencia',
+    title: 'Retratos de Alma & Presença',
+    subtitle: 'Retrato Autoral com iluminação artística de estúdio',
+    category: 'retratos',
+    categoryLabel: 'Retratos Autorais',
+    coverImage: '/images/foto7.jpg',
+    photos: [
+      '/images/foto7.jpg',
+      '/images/foto11.jpg',
+      '/images/foto3-1.jpg',
+    ],
+    description:
+      'A potência do olhar e a suavidade da luz do estúdio. Retratos pessoais com verdade, elegância atemporal e profunda sensibilidade artística.',
+    date: 'Ensaio Autoral',
+    clientName: 'Retrato Autoral',
+    isFeatured: true,
+    createdAt: 1700000004000,
+  },
+  {
+    id: 'ensaio-gestante-poesia',
+    title: 'Doçura & Florir da Vida',
+    subtitle: 'Maternidade com tecidos orgânicos e atmosfera poética',
+    category: 'gestante',
+    categoryLabel: 'Gestante & Maternidade',
+    coverImage: '/images/foto4.jpg',
+    photos: [
+      '/images/foto4.jpg',
+      '/images/foto1.jpg',
+      '/images/foto9.jpg',
+    ],
+    description:
+      'Celebrando a gestação com a delicadeza dos tecidos fluidos e a luz dourada do final de tarde no estúdio Fátima Sampaio.',
+    date: 'Ensaio Autoral',
+    clientName: 'Beatriz & Gabriel',
+    isFeatured: false,
+    createdAt: 1700000005000,
+  },
+  {
+    id: 'ensaio-casal-encontros',
+    title: 'Encontros de Amor & Calma',
+    subtitle: 'Conexão atemporal e toques de afeto',
+    category: 'casal',
+    categoryLabel: 'Casais',
+    coverImage: '/images/foto8.jpg',
+    photos: [
+      '/images/foto8.jpg',
+      '/images/foto2.jpg',
+      '/images/foto11.jpg',
+    ],
+    description:
+      'Histórias que atravessam gerações. O amor registrado com leveza e a experiência de quem fotografa com o coração há 29 anos.',
+    date: 'Ensaio Autoral',
+    clientName: 'Carla & Roberto',
+    isFeatured: false,
+    createdAt: 1700000006000,
+  },
+];

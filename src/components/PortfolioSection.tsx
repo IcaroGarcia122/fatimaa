@@ -1,53 +1,87 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { ChevronLeft, ChevronRight, Maximize2, Sparkles, Heart, Images } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, Sparkles, Heart, Images, Layers, ArrowRight } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, FreeMode } from 'swiper/modules';
+import { Autoplay, FreeMode } from 'swiper/modules';
 
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
 
 import { PORTFOLIO_DATA } from '../data/canvaData';
-import type { PortfolioItem } from '../types';
+import type { Ensaio, PortfolioItem } from '../types';
 
 interface PortfolioSectionProps {
+  ensaios: Ensaio[];
+  onSelectEnsaio: (ensaio: Ensaio) => void;
   onSelectPhoto: (item: PortfolioItem) => void;
   onOpenBooking: () => void;
   onOpenFullPortfolio: () => void;
 }
 
 export default function PortfolioSection({
-  onSelectPhoto,
+  ensaios,
+  onSelectEnsaio,
   onOpenBooking,
   onOpenFullPortfolio,
 }: PortfolioSectionProps) {
   const [activeCategory, setActiveCategory] = useState<string>('todos');
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
 
   const categories = [
     { id: 'todos', label: 'Todos os Ensaios' },
     { id: 'gestante', label: 'Gestante & Maternidade' },
     { id: 'familia', label: 'Família & Vínculos' },
     { id: 'casal', label: 'Casais' },
-    { id: 'retratos', label: 'Retratos Autoriais' },
+    { id: 'retratos', label: 'Retratos Autorais' },
   ];
 
-  const filteredItems =
+  const filteredEnsaios =
     activeCategory === 'todos'
-      ? PORTFOLIO_DATA.items
-      : PORTFOLIO_DATA.items.filter((item) => {
-          if (activeCategory === 'gestante') return item.categoryLabel.toLowerCase().includes('gestante');
-          if (activeCategory === 'familia') return item.categoryLabel.toLowerCase().includes('família');
-          if (activeCategory === 'casal') return item.categoryLabel.toLowerCase().includes('casal');
-          if (activeCategory === 'retratos') return item.categoryLabel.toLowerCase().includes('retrato');
+      ? ensaios
+      : ensaios.filter((ensaio) => {
+          if (activeCategory === 'gestante') {
+            return (
+              ensaio.category === 'gestante' ||
+              ensaio.categoryLabel.toLowerCase().includes('gestante')
+            );
+          }
+          if (activeCategory === 'familia') {
+            return (
+              ensaio.category === 'familia' ||
+              ensaio.categoryLabel.toLowerCase().includes('família')
+            );
+          }
+          if (activeCategory === 'casal') {
+            return (
+              ensaio.category === 'casal' ||
+              ensaio.categoryLabel.toLowerCase().includes('casal')
+            );
+          }
+          if (activeCategory === 'retratos') {
+            return (
+              ensaio.category === 'retratos' ||
+              ensaio.categoryLabel.toLowerCase().includes('retrato')
+            );
+          }
           return true;
         });
 
-  // Duplicate items if needed for seamless loop
-  const displayItems =
-    filteredItems.length < 8
-      ? [...filteredItems, ...filteredItems]
-      : filteredItems;
+  // Duplicate ensaios if needed for seamless loop
+  const displayEnsaios =
+    filteredEnsaios.length < 5 && filteredEnsaios.length > 0
+      ? [...filteredEnsaios, ...filteredEnsaios]
+      : filteredEnsaios;
+
+  const handleCategorySelect = (catId: string) => {
+    setActiveCategory(catId);
+    if (swiperInstance) {
+      try {
+        swiperInstance.slideTo(0);
+      } catch (err) {
+        // ignore
+      }
+    }
+  };
 
   return (
     <section id="portfolio" className="py-20 sm:py-28 bg-[#fcfbf9] relative overflow-hidden">
@@ -62,24 +96,24 @@ export default function PortfolioSection({
         >
           <div className="max-w-2xl">
             <span className="text-xs font-semibold tracking-[0.25em] text-[#01590d] uppercase block mb-3">
-              PORTFÓLIO & GALERIA
+              PORTFÓLIO DE ENSAIOS
             </span>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-light text-[#01590d] leading-none">
               {PORTFOLIO_DATA.sectionTitle}
             </h2>
             <p className="mt-4 text-base sm:text-lg text-neutral-700 font-light leading-relaxed">
-              {PORTFOLIO_DATA.sectionSubtitle}
+              Explore cada ensaio como uma história completa com múltiplos registros, alma e sensibilidade.
             </p>
           </div>
 
-          {/* Controls: Categories + Button + Navigation arrows for Swiper */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full lg:w-auto">
+          {/* Controls: Filter Tabs + Full Portfolio Button + Navigation Arrows */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full lg:w-auto flex-wrap">
             {/* Scrollable Categories on Mobile */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none w-full sm:w-auto">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
+                  onClick={() => handleCategorySelect(cat.id)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer ${
                     activeCategory === cat.id
                       ? 'bg-[#01590d] text-white shadow-xs'
@@ -94,6 +128,7 @@ export default function PortfolioSection({
             <div className="flex items-center gap-2 justify-between sm:justify-start">
               {/* Button to open full portfolio */}
               <button
+                type="button"
                 onClick={onOpenFullPortfolio}
                 className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-200 bg-[#01590d] hover:bg-[#027513] text-white flex items-center gap-1.5 sm:gap-2 shadow-xs hover:shadow-md cursor-pointer active:scale-95"
               >
@@ -101,17 +136,21 @@ export default function PortfolioSection({
                 <span>Ver Portfólio Completo</span>
               </button>
 
-              {/* Navigation Arrows */}
+              {/* Navigation Arrows with Direct Swiper Instance Handlers */}
               <div className="flex items-center gap-2">
                 <button
-                  className="portfolio-prev w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:bg-[#01590d] hover:text-white hover:border-[#01590d] flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
-                  aria-label="Foto anterior"
+                  type="button"
+                  onClick={() => swiperInstance?.slidePrev()}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:bg-[#01590d] hover:text-white hover:border-[#01590d] flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
+                  aria-label="Ensaio anterior"
                 >
                   <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <button
-                  className="portfolio-next w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:bg-[#01590d] hover:text-white hover:border-[#01590d] flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
-                  aria-label="Próxima foto"
+                  type="button"
+                  onClick={() => swiperInstance?.slideNext()}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:bg-[#01590d] hover:text-white hover:border-[#01590d] flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
+                  aria-label="Próximo ensaio"
                 >
                   <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
@@ -121,7 +160,7 @@ export default function PortfolioSection({
         </motion.div>
       </div>
 
-      {/* Full-width Carousel: fotos como sessão inteira uma do lado da outra passando como carrossel */}
+      {/* Swiper Carousel of Complete Ensaios */}
       <motion.div
         initial={{ opacity: 0, y: 35 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -130,20 +169,20 @@ export default function PortfolioSection({
         className="w-full relative px-4 sm:px-6 lg:px-8"
       >
         <Swiper
-          modules={[Autoplay, Navigation, FreeMode]}
+          key={activeCategory}
+          onSwiper={setSwiperInstance}
+          modules={[Autoplay, FreeMode]}
           slidesPerView={1.15}
           spaceBetween={16}
           centeredSlides={false}
-          loop={true}
+          loop={displayEnsaios.length > 2}
           speed={700}
+          preventClicks={false}
+          preventClicksPropagation={false}
           autoplay={{
-            delay: 3500,
+            delay: 4500,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
-          }}
-          navigation={{
-            prevEl: '.portfolio-prev',
-            nextEl: '.portfolio-next',
           }}
           breakpoints={{
             540: {
@@ -151,55 +190,99 @@ export default function PortfolioSection({
               spaceBetween: 20,
             },
             768: {
-              slidesPerView: 2.5,
+              slidesPerView: 2.3,
               spaceBetween: 24,
             },
             1024: {
-              slidesPerView: 3.4,
+              slidesPerView: 3.1,
               spaceBetween: 24,
             },
             1400: {
-              slidesPerView: 4.2,
+              slidesPerView: 3.8,
               spaceBetween: 28,
             },
           }}
           className="w-full py-4 overflow-visible"
         >
-          {displayItems.map((item, index) => (
-            <SwiperSlide key={`${item.id}-${index}`} className="h-auto">
+          {displayEnsaios.map((ensaio, index) => (
+            <SwiperSlide key={`${ensaio.id}-${index}`} className="h-auto">
               <div
-                onClick={() => onSelectPhoto(item)}
-                className="group relative h-[460px] sm:h-[520px] md:h-[580px] lg:h-[620px] w-full rounded-3xl overflow-hidden bg-neutral-900 border border-neutral-200/80 shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col justify-end"
+                onClick={() => onSelectEnsaio(ensaio)}
+                className="group relative h-[480px] sm:h-[530px] md:h-[590px] w-full rounded-3xl overflow-hidden bg-neutral-900 border border-neutral-200/80 shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col justify-end"
               >
-                {/* High Resolution Photography */}
+                {/* Cover Image */}
                 <img
-                  src={item.image}
-                  alt={item.title}
+                  src={ensaio.coverImage || ensaio.photos[0]}
+                  alt={ensaio.title}
                   loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                  className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
 
-                {/* Subtle Ambient Vignette & Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-85 group-hover:opacity-95 transition-opacity" />
+                {/* Ambient Vignette & Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10 opacity-85 group-hover:opacity-95 transition-opacity" />
 
-                {/* Hover Maximize Button */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-neutral-900 flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+                {/* Top Badge: Photo count + Category */}
+                <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-medium border border-white/20">
+                    <Layers className="w-3 h-3 text-emerald-400" />
+                    <span>{ensaio.photos.length} Fotos</span>
+                  </span>
+
+                  <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
                     <Maximize2 className="w-4 h-4" />
                   </div>
                 </div>
 
-                {/* Minimalist Bottom Caption */}
+                {/* Bottom Content: Session Info + Thumbnails Preview + Direct Button */}
                 <div className="relative z-10 p-5 sm:p-6">
-                  <span className="inline-block px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-semibold tracking-wider uppercase mb-2 border border-white/20">
-                    {item.categoryLabel}
+                  {/* Category label */}
+                  <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-emerald-300 text-[10px] font-semibold tracking-wider uppercase mb-2 border border-white/15">
+                    {ensaio.categoryLabel}
                   </span>
-                  <h3 className="text-lg sm:text-xl font-display font-medium text-white leading-snug">
-                    {item.title}
+
+                  {/* Title */}
+                  <h3 className="text-xl sm:text-2xl font-display font-medium text-white leading-tight mb-1 group-hover:text-emerald-300 transition-colors">
+                    {ensaio.title}
                   </h3>
-                  <p className="text-xs text-neutral-200 font-light mt-1 line-clamp-1">
-                    {item.subtitle}
-                  </p>
+
+                  {/* Subtitle / Description */}
+                  {ensaio.subtitle && (
+                    <p className="text-xs text-neutral-300 font-light line-clamp-1 mb-3">
+                      {ensaio.subtitle}
+                    </p>
+                  )}
+
+                  {/* Mini thumbnails preview strip of photos in this session */}
+                  <div className="pt-2.5 border-t border-white/15 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      {ensaio.photos.slice(0, 3).map((thumb, tIdx) => (
+                        <div
+                          key={tIdx}
+                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg border border-white/40 overflow-hidden shrink-0 shadow-xs"
+                        >
+                          <img src={thumb} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      ))}
+                      {ensaio.photos.length > 3 && (
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/20 backdrop-blur-xs flex items-center justify-center text-[10px] text-white font-medium border border-white/30">
+                          +{ensaio.photos.length - 3}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Explicit Button: Ver Ensaio */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectEnsaio(ensaio);
+                      }}
+                      className="px-3.5 py-1.5 rounded-full bg-white/15 hover:bg-[#01590d] text-white text-[11px] font-semibold tracking-wider uppercase transition-all backdrop-blur-md flex items-center gap-1.5 cursor-pointer shadow-xs"
+                    >
+                      <span>Ver Ensaio</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-emerald-400" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </SwiperSlide>
@@ -222,16 +305,17 @@ export default function PortfolioSection({
             </div>
             <div>
               <h4 className="text-sm sm:text-base font-semibold text-neutral-900 leading-snug">
-                Gostou do estilo acolhedor e atemporal?
+                Gostou do estilo acolhedor e atemporal dos ensaios?
               </h4>
               <p className="text-[11px] sm:text-xs text-neutral-600 mt-0.5 font-light">
-                Cada ensaio é personalizado de acordo com a essência e o ritmo de vocês.
+                Cada ensaio é único e personalizado de acordo com a história e o ritmo da sua família.
               </p>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
             <button
+              type="button"
               onClick={onOpenFullPortfolio}
               className="w-full sm:w-auto px-5 py-2.5 sm:py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-semibold tracking-wider uppercase transition-all duration-200 flex items-center justify-center gap-2 border border-neutral-200 cursor-pointer active:scale-95 text-center"
             >
@@ -239,6 +323,7 @@ export default function PortfolioSection({
               <span>Ver Portfólio Completo</span>
             </button>
             <button
+              type="button"
               onClick={onOpenBooking}
               className="w-full sm:w-auto px-6 py-2.5 sm:py-3 rounded-full bg-[#01590d] hover:bg-[#027513] text-white text-xs font-semibold tracking-wider uppercase transition-all duration-200 shadow-sm cursor-pointer active:scale-95 text-center"
             >

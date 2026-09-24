@@ -39,15 +39,15 @@ export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
           <span>{HERO_DATA.badge}</span>
         </motion.div>
 
-        {/* The Famous Canva Headline: "Histórias, que merecem ser Lembradas!" */}
+        {/* The Famous Headline: "Histórias, que merecem ser Lembradas!" */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-light text-white tracking-tight leading-[1.08] max-w-4xl mx-auto mb-8"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-light text-white tracking-tight leading-[1.25] sm:leading-[1.2] max-w-4xl mx-auto mb-8"
         >
           Histórias, que merecem ser{' '}
-          <span className="font-script text-[#4ade80] italic block sm:inline font-normal tracking-wide text-5xl sm:text-7xl md:text-8xl lg:text-9xl mt-2 sm:mt-0">
+          <span className="font-editorial italic font-normal text-emerald-400 block sm:inline tracking-normal text-4xl sm:text-5xl md:text-6xl lg:text-7xl sm:ml-1">
             Lembradas!
           </span>
         </motion.h1>

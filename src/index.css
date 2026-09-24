@@ -4,6 +4,12 @@
   .font-display {
     font-family: 'Cormorant Garamond', Georgia, serif;
   }
+  .font-editorial {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+  .font-bodoni {
+    font-family: 'Bodoni Moda', Georgia, serif;
+  }
   .font-script {
     font-family: 'Great Vibes', cursive;
   }

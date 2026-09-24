@@ -36,7 +36,7 @@ export default function PhotoStripCarousel({ onSelectPhoto }: PhotoStripCarousel
                 src={photo.image}
                 alt=""
                 loading="lazy"
-                className="w-full h-full object-cover object-center group-hover/item:scale-105 transition-transform duration-700 ease-out"
+                className="w-full h-full object-cover object-top group-hover/item:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
           ))}

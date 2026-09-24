@@ -32,7 +32,7 @@ export default function AboutSection({ onOpenBooking }: AboutSectionProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-6 flex flex-col justify-center pb-12 sm:pb-20"
+            className="lg:col-span-6 flex flex-col justify-center pb-6 sm:pb-10 lg:pb-20 relative z-20"
           >
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-900/10 border border-emerald-900/20 text-[#01590d] text-xs font-semibold tracking-wider uppercase mb-6 w-fit">
               <Sparkles className="w-3.5 h-3.5" />
@@ -70,7 +70,7 @@ export default function AboutSection({ onOpenBooking }: AboutSectionProps) {
             </div>
 
             {/* Fatima Sampaio Signature & CTA */}
-            <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-6 relative z-20">
               <div>
                 <span className="font-script text-4xl text-[#01590d] block">
                   Fatima Sampaio
@@ -82,23 +82,23 @@ export default function AboutSection({ onOpenBooking }: AboutSectionProps) {
 
               <button
                 onClick={onOpenBooking}
-                className="px-6 py-3 rounded-full bg-[#01590d] hover:bg-[#027513] text-white text-xs font-semibold tracking-wider uppercase transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
+                className="px-6 py-3 rounded-full bg-[#01590d] hover:bg-[#027513] text-white text-xs font-semibold tracking-wider uppercase transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer shrink-0"
               >
                 CONVERSAR COM A FÁTIMA
               </button>
             </div>
           </motion.div>
 
-          {/* Right Column: Fátima e Moldura ampliadas proporcionalmente */}
+          {/* Right Column: Fátima e Moldura com espaçamento seguro no mobile */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-6 flex flex-col items-center justify-end"
+            className="lg:col-span-6 flex flex-col items-center justify-end mt-16 sm:mt-24 lg:mt-0 pt-10 sm:pt-14 lg:pt-0 relative z-10"
           >
             {/* Visual Stage */}
-            <div className="relative w-full max-w-[460px] sm:max-w-[500px] md:max-w-[540px] flex items-end justify-center select-none">
+            <div className="relative w-full max-w-[460px] sm:max-w-[500px] md:max-w-[540px] flex items-end justify-center select-none pt-12 sm:pt-16 lg:pt-8">
               
               {/* The Moldura (Background Frame / Card) */}
               <div
